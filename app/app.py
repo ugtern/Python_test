@@ -1,6 +1,7 @@
 from aiohttp import web
 from app.db_func import MongoFunc
 import json
+import logging
 
 
 class App:
@@ -29,15 +30,21 @@ class App:
 
         mongo_db = MongoFunc(self.mongo_host, self.mongo_port)
         posts = mongo_db.take_posts()
-        last_post = posts[len(posts)-1]
-        output_text = 'Заголовок: {}\nТекст: {}\nОбщее количество сообщений в базе: {}'.format(str(last_post['title']), str(last_post['text']), len(posts))
+        count = len(posts)
+        if count > 0:
+            last_post = posts[len(posts)-1]
+            output_text = 'Заголовок: {}\nТекст: {}\nОбщее количество сообщений в базе: {}'.format(str(last_post['title']), str(last_post['text']), len(posts))
+        else:
+            output_text = 'Общее количество сообщений в базе: {}'.format(len(posts))
 
         return web.Response(status=200, text=output_text)
 
     def delete_data(self, req):
 
         mongo_db = MongoFunc(self.mongo_host, self.mongo_port)
+        mongo_db.delete_posts()
 
+        return web.Response(status=200, text='deleted')
 
     def get_log(self, req):
 

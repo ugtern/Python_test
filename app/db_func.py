@@ -28,6 +28,11 @@ class MongoFunc(ConnectMongo):
         else:
             logging.info('пост {} был записан в монго в {}'.format(post['title'], now))
 
+    def delete_posts(self):
+
+        posts = self.get_posts()
+        posts.delete_many({})
+
     def take_posts(self):
         posts = self.get_posts()
         return [post for post in posts.find()]
