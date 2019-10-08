@@ -5,3 +5,5 @@ WORKDIR /python_test
 ADD requirements.txt /python_test/
 RUN pip install -r requirements.txt
 ADD . /python_test/
+
+CMD [ "python", "-u", "./index.py" ]

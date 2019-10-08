@@ -7,8 +7,11 @@ data = {
     'two': '15',
 }
 
-req = requests.get(url)
-print(req.text)
+# req = requests.get(url)
+# print(req.text)
+#
+# req = requests.post(url, json.dumps(data))
+# print(req.text)
 
-req = requests.post(url, json.dumps(data))
+req = requests.get('{}log/'.format(url))
 print(req.text)

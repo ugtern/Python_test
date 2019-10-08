@@ -1,5 +1,4 @@
 from pymongo import MongoClient
-import datetime
 
 
 class ConnectMongo:
@@ -14,19 +13,6 @@ class ConnectMongo:
     def get_posts(self):
         db = self.get_db()
         return db.posts
-
-    def push_db(self, title, text):
-        posts = self.get_posts()
-        post = {
-            'title': title,
-            'text': text,
-            'date': datetime.datetime.now()
-        }
-        posts.insert_one(post)
-
-    def take_posts(self):
-        posts = self.get_posts()
-        return [post for post in posts.find()]
 
 # print(db)
 #
