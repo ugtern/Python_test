@@ -14,6 +14,10 @@ class ConnectMongo:
         db = self.get_db()
         return db.posts
 
+    def get_users(self):
+        db = self.get_db()
+        return db.users
+
 # print(db)
 #
 # post = {

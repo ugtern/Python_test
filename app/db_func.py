@@ -36,3 +36,19 @@ class MongoFunc(ConnectMongo):
     def take_posts(self):
         posts = self.get_posts()
         return [post for post in posts.find()]
+
+    def reg_user(self, login, password):
+
+        user = {'login': login, 'password': password}
+
+        users = self.get_users()
+        try:
+            users.insert_one(user)
+        except:
+            logging.error('Неполучилось создать пользователя')
+        else:
+            logging.info('Пользователь сохранен')
+
+    def auth_user(self, login, password):
+        users = self.get_users()
+        return True if [user for user in users.find_one({'login': login, 'password': password})] else False
