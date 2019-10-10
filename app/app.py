@@ -76,11 +76,6 @@ class App:
         'Access-Control-Allow-Origin': req.headers['Origin']
         })
 
-        # return web.Response(status=200, text={'token': token}, headers={
-        #     'Access-Control-Allow-Origin': req.headers['Origin'],
-        #     type: 'json'
-        # })
-
     def get_log(self, req):
 
         output_text = ''
