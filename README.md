@@ -8,4 +8,4 @@
 4) docker-compose up
 5) переходим в каталог фронтенда и запускаем npm install
 6) npm run dev
-готово. для запуска проекта docker-compose up, для запуска тестов из виртуального окружения python tester.py
+- готово. для запуска проекта docker-compose up, для запуска тестов из виртуального окружения python tester.py
