@@ -2,13 +2,82 @@ from aiohttp import web
 from app.db_func import MongoFunc
 import json
 from jose import jwt
+import pandas as pd
+import logging
 
 
 class App:
+
+    logging.basicConfig(filename='log.log', level=logging.DEBUG)
+
     def __init__(self, configs):
         self.a = 0
         self.mongo_port = int(configs['port'])
         self.mongo_host = configs['host']
+        self.classes = []
+        self.df = pd.read_csv('./app/data/train_data_14_december.csv')
+
+        try:
+            self.df_valid_data = pd.read_csv('new_data.csv')
+        except:
+            self.df_valid_data = pd.DataFrame()
+
+    async def get_next_message(self, req):
+
+        body = await req.read()
+        body = json.loads(body.decode('utf-8'))
+
+        user_login = body.get('login')
+
+        try:
+            df_valid = pd.read_csv('new_data.csv')
+            current_id = int(df_valid[df_valid.login == user_login].current_id.max()) + 1
+        except:
+            current_id = body.get('current_id') or 0
+
+        current_field = self.df[self.df.index == current_id]
+        current_message = current_field.message.values[0]
+
+        return web.json_response(status=200, data={'current_message': current_message, 'current_id': current_id}, headers={
+        'Access-Control-Allow-Origin': req.headers['Origin']
+        })
+
+    async def set_correct_class(self, req):
+
+        body = await req.read()
+        body = json.loads(body.decode('utf-8'))
+
+        user_login = body.get('login')
+        correct_class = body.get('correct_class')
+        current_id = body.get('current_id')
+
+        current_field = self.df[self.df.index == current_id]
+        current_message = current_field.message.values[0]
+
+        self.df_valid_data = self.df_valid_data.append(pd.DataFrame({'current_id': [current_id],
+                                                                     'login': [user_login],
+                                                                     'message': [current_message],
+                                                                     'class': [correct_class]}), ignore_index=True)
+
+        self.df_valid_data.to_csv('new_data.csv')
+
+        current_id += 1
+
+        return web.json_response(status=200, data={'current_id': current_id}, headers={
+        'Access-Control-Allow-Origin': req.headers['Origin']
+        })
+
+    async def get_classes(self, req):
+
+        classes = list(self.df.label.unique())
+
+        logging.info(classes)
+
+        self.classes = classes
+
+        return web.json_response(status=200, data={'classes': classes}, headers={
+        'Access-Control-Allow-Origin': req.headers['Origin']
+        })
 
     async def push_data(self, req):
 

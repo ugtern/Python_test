@@ -19,4 +19,9 @@ main.router.add_route('GET', '/', app.get_data)
 main.router.add_route('GET', '/log/', app.get_log)
 main.router.add_route('DELETE', '/del/', app.delete_data)
 
+main.router.add_route('GET', '/get_classes/', app.get_classes)
+
+main.router.add_route('POST', '/get_next_message/', app.get_next_message)
+main.router.add_route('POST', '/set_correct_class/', app.set_correct_class)
+
 web.run_app(main, host=file['host'], port=file['port'])

@@ -7,7 +7,8 @@ class ConnectMongo:
         self.port = port
 
     def get_db(self):
-        client = MongoClient(self.host, self.port)
+        client = MongoClient('mongodb://chat_db:27017')
+        # client = MongoClient(self.host, self.port)
         return client.test
 
     def get_posts(self):
